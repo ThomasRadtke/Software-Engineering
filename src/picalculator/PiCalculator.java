@@ -13,13 +13,13 @@ public class PiCalculator {
 		while (!ready) {
 			// Jeder zweite Durchlauf Faktor addieren
 			if( count % 2 == 0) {
-				calc -= (i/j);
+				fact -= (i/j);
 			}
 			else {			
-				calc += (i/j);
+				fact += (i/j);
 			}
 			// Näherungswert ermitteln
-			pi = Math.round(konst * calc * rund) / rund;
+			pi = Math.round(konst * fact * calc) / calc;
 			
 			// Wenn Näherungswert gleich vorherigem Durchlauf
 			if (pi == pruef) {
