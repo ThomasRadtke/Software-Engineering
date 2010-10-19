@@ -8,42 +8,42 @@ public class PiCalculator {
 
 	public static void main(String[] args) {
 
-		JTextField stellen = new JTextField();
+		JTextField Stellen = new JTextField();
 		
-		Object[] message = {"Anzahl Nachkommastellen: ", stellen};
+		Object[] Message = {"Anzahl Nachkommastellen: ", Stellen};
 		
-		JOptionPane pane = new JOptionPane( message, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+		JOptionPane pane = new JOptionPane( Message, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
 		pane.createDialog(null,"Genauigkeit wählen").setVisible(true);
 		
-		String choice = stellen.getText();
+		String choice = Stellen.getText();
 		
-		int choice_stellen = Integer.valueOf(choice).intValue();
+		int Precision = Integer.valueOf(choice).intValue();
 		
-		getPi(choice_stellen);
+		getPi(Precision);
 	}
 	
-	public static void getPi(int choice_stellen) {
+	public static void getPi(int Precision) {
 		
-		int counter = 2, i = 1, precision = choice_stellen, converter = 1;
-		double pi, pruef_pi = 4, startwert = 4, factor = 1, j = 3, calculate_pi = Math.pow(10, precision);
-		boolean ready = false;
+		int Counter = 2, i = 1, Converter = 1;
+		double Pi, PiCheck = 4, Startwert = 4, Factor = 1, j = 3, CalculatePi = Math.pow(10, Precision);
+		boolean PiCalculated = false;
 		
-		while (!ready) {
-			converter *= -1;			
-			factor += (i/j) * converter;
+		while (!PiCalculated) {
+			Converter *= -1;			
+			Factor += (i/j) * Converter;
 			
 			// Näherungswert ermitteln
-			pi = Math.round(startwert * factor * calculate_pi) / calculate_pi;
+			Pi = Math.round(Startwert * Factor * CalculatePi) / CalculatePi;
 			
 			// Wenn Näherungswert gleich vorherigem Durchlauf
-			if (pi == pruef_pi) {
+			if (Pi == PiCheck) {
 				//Kalkulierten Wert ausgeben, Schleife abbrechen
-				JOptionPane.showMessageDialog(null,"Auf "+precision+" Stellen kalkuliert lautet Pi: "+pi,"Ergebnis",JOptionPane.INFORMATION_MESSAGE);
-				ready = true;
+				JOptionPane.showMessageDialog(null,"Auf "+Precision+" Stellen kalkuliert lautet Pi: "+Pi,"Ergebnis",JOptionPane.INFORMATION_MESSAGE);
+				PiCalculated = true;
 			}
 			else {
-				pruef_pi = pi;
-				counter++;
+				PiCheck = Pi;
+				Counter++;
 				j += 2;
 			}
 		}
