@@ -1,11 +1,35 @@
 package minesweeper;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+
 public class Minesweeper {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		
-		int m = 4, n = 4;
-		String[][] Feld = new String[n][m];
+		int n,m;
+		String FeldInput;
+		BufferedReader spielfeld = new  BufferedReader ( new FileReader("Input.txt"));
+		String zeile = spielfeld.readLine();
+		String rows = zeile.substring(0,1);
+		String cols = zeile.substring(2,3);
+		n = Integer.valueOf(rows).intValue();
+		m = Integer.valueOf(cols).intValue();
+		ArrayList<String> list = new ArrayList<String>();
+		while ((FeldInput = spielfeld.readLine()) != null) {
+			list.add(FeldInput);
+		}
+		
+		spielfeld.close();
+		String[][] Court = new String[n][m];
+		
+		for (int i = 0; i < n ; i++) {
+			for (int j = 0, k = 1; j < m ; j++, k++) {
+			Court[i][j] = list.get(i).substring(j,k);
+			}
+		}		
+		
 		// Hinweis- und Minen-Array größer als Feld-Array
 		// Zur Bestimmunge der Nachbarn via For-Schleife
 		int[][] Hint = new int[n + 2][m + 2];
@@ -16,29 +40,12 @@ public class Minesweeper {
 				Mine[i][j] = false;
 			}
 		}
-
-		Feld[0][0] = "*";
-		Feld[0][1] = ".";
-		Feld[0][2] = ".";
-		Feld[0][3] = ".";
-		Feld[1][0] = ".";
-		Feld[1][1] = ".";
-		Feld[1][2] = ".";
-		Feld[1][3] = ".";
-		Feld[2][0] = ".";
-		Feld[2][1] = "*";
-		Feld[2][2] = ".";
-		Feld[2][3] = ".";
-		Feld[3][0] = ".";
-		Feld[3][1] = ".";
-		Feld[3][2] = ".";
-		Feld[3][3] = ".";
-
+		
 		// Alle Felder mit Mine - True setzen
 		// i & j = 1 da Hinweis- & Minen-Array groeßer als Feld-Array
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= m; j++) {
-				if (Feld[i - 1][j - 1] == "*") {
+				if (Court[i - 1][j - 1].equals("*")) {
 					Mine[i][j] = true;
 				}
 			}
@@ -57,7 +64,18 @@ public class Minesweeper {
 				}
 			}
 		}
-
+		System.out.println("Field#1");
+		// Ausgabe des Ausgansfeldes
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				System.out.print(Court[i][j]);
+			}
+			// Leerzeile für neue Zeile
+			System.out.println();
+		}		
+		
+		System.out.println();
+		System.out.println("Lösung Field#1");
 		// Ausgabe des Hinweisfeldes...
 		for (int i = 1; i <= n; i++) {
 			for (int j = 1; j <= m; j++) {
