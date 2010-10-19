@@ -53,8 +53,11 @@ public class Minesweeper {
 		// Spieldaten einlesen...
 		InputRow = GameCourt.readLine();
 		// Anzahl Spalten / Zeilen auslesen...
-		String Rows = InputRow.substring(0, 1);
-		String Columns = InputRow.substring(2, 3);
+		//String Rows = InputRow.substring(0, 1);
+		//String Columns = InputRow.substring(2, 3);
+		String[] FieldSize = InputRow.split(" ");
+		String Rows = FieldSize[0].trim();
+		String Columns = FieldSize[1].trim();
 		n = Integer.valueOf(Rows).intValue();
 		m = Integer.valueOf(Columns).intValue();
 
