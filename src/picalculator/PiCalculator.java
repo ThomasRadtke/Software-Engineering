@@ -1,35 +1,49 @@
 package picalculator;
 
 import java.lang.Math;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 public class PiCalculator {
 
 	public static void main(String[] args) {
 
-		double pi, pruef = 4, konst = 4, fact = 1, j = 3, calc = Math.pow(10, 5);
-		int count = 0, i = 1;
+		JTextField stellen = new JTextField();
+		
+		Object[] message = {"Anzahl Nachkommastellen: ", stellen};
+		
+		JOptionPane pane = new JOptionPane( message, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+		pane.createDialog(null,"Genauigkeit wählen").setVisible(true);
+		
+		String choice = stellen.getText();
+		
+		int choice_stellen = Integer.valueOf(choice).intValue();
+		
+		getPi(choice_stellen);
+	}
+	
+	public static void getPi(int choice_stellen) {
+		
+		int counter = 2, i = 1, precision = choice_stellen, converter = 1;
+		double pi, pruef_pi = 4, startwert = 4, factor = 1, j = 3, calculate_pi = Math.pow(10, precision);
 		boolean ready = false;
 		
 		while (!ready) {
-			// Jeder zweite Durchlauf Faktor addieren
-			if( count % 2 == 0) {
-				fact -= (i/j);
-			}
-			else {			
-				fact += (i/j);
-			}
+			converter *= -1;			
+			factor += (i/j) * converter;
+			
 			// Näherungswert ermitteln
-			pi = Math.round(konst * fact * calc) / calc;
+			pi = Math.round(startwert * factor * calculate_pi) / calculate_pi;
 			
 			// Wenn Näherungswert gleich vorherigem Durchlauf
-			if (pi == pruef) {
+			if (pi == pruef_pi) {
 				//Kalkulierten Wert ausgeben, Schleife abbrechen
-				System.out.println("Auf fünf Stellen kalkuliert lautet Pi: " +pi);
+				JOptionPane.showMessageDialog(null,"Auf "+precision+" Stellen kalkuliert lautet Pi: "+pi,"Ergebnis",JOptionPane.INFORMATION_MESSAGE);
 				ready = true;
 			}
 			else {
-				pruef = pi;
-				count++;
+				pruef_pi = pi;
+				counter++;
 				j += 2;
 			}
 		}
