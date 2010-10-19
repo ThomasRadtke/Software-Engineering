@@ -9,9 +9,8 @@ public class Minesweeper {
 		// Hinweis- und Minen-Array größer als Feld-Array
 		// Zur Bestimmunge der Nachbarn via For-Schleife
 		int[][] Hint = new int[n + 2][m + 2];
-		Boolean[][] Mine = new Boolean[n + 2][m + 2];
-
 		// Alle möglichen Minenfelder false setzen
+		Boolean[][] Mine = new Boolean[n + 2][m + 2];
 		for (int i = 0; i < Mine.length; i++) {
 			for (int j = 0; j < Mine[0].length; j++) {
 				Mine[i][j] = false;
