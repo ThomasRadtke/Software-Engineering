@@ -6,8 +6,7 @@ import java.io.LineNumberReader;
 import java.util.ArrayList;
 
 /*
- * Kata Minesweeper Version 3.0					19.10.2010
- *  - Input.txt verarbeitet max. 9 Zeilen  / Spalten
+ * Kata Minesweeper PreFinal-Version				22.10.2010
  */
 
 public class Minesweeper {
