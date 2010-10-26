@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.*;
 
 /*
  * Kata Minesweeper PreFinal-Version				22.10.2010
@@ -11,140 +12,119 @@ import java.util.ArrayList;
 
 public class Minesweeper {
 
-	// Oft verwendete Variablen deklarieren
 	public static int n, m;
-	public static String[][] Court;
-	public static ArrayList<String> GameList;
-	public static String InputRow;
+	public static char[][] Court;
+	public static int[][] Result;
+	public static String[] Game;
+	public static boolean run;
 
 	public static void main(String[] args) throws Exception {
-		// Zähler für Anzahl der Spiele...
-		int Counter = 0;
-		// .txt-Datei einlesen
-		LineNumberReader GameCourt = new LineNumberReader(new FileReader(
-				"Input.txt"));
-		// Alle Zeilen der Datei einlesen
-		while ((InputRow = GameCourt.readLine()) != null) {
-			// Wenn Zeile mit Ziffer beginnt...
-			if (Character.isDigit(InputRow.charAt(0))) {
-				// Zähler erhöhen...
-				Counter++;
-				// Spiel Überschrift setzen...
-				System.out.println("*** Field#" + Counter);
-				System.out.println();
-				/* Zeile in welcher das Spiel beginnt an...
-				 * Methode SolveField() übergeben
-				 */
-				SolveField(GameCourt.getLineNumber());
+
+		System.out.println("### MineSweeper ###");
+		Startgame();
+		System.out.println("###################");
+	}
+
+	public static void Startgame() throws Exception {
+
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Bitte Anzahl der Zeilen eingeben: ");
+		int rows = scanner.nextInt();
+		System.out.print("Bitte Anzahl der Spalten eingeben: ");
+		int columns = scanner.nextInt();
+
+		Game = new String[rows];
+		Court = new char[rows][columns];
+		for (int i = 0; i < rows; i++) {
+			Game[i] = scanner.next();
+			if (Game[i].length() != columns) {
+				System.out.println("***Fehler bei der Eingabe***");
+				System.exit(1);
 			}
+			if (!Game[i].matches("[*.]+")) {
+				System.out.println("***Fehler bei der Eingabe***");
+				System.exit(1);
+			}
+		}
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < columns; j++) {
+				Court[i][j] = Game[i].charAt(j);
+			}
+		}
+
+		Result = SolveField(Court, rows, columns);
+		System.out.println("~~~~~~~~~~~~~");
+		Output(Result, Court, rows, columns);
+		System.out.println("~~~~~~~~~~~~~");
+	}
+
+	public static void Output(int[][] Result, char[][] Court, int rows,
+			int columns) {
+
+		// Ausgabe des Spielfeldes
+		System.out.println("*** Eingabe: ");
+		for (int i = 0; i < rows; i++) {
+			String placeholder = "    ";
+			for (int j = 0; j < columns; j++) {
+				placeholder += Court[i][j];
+			}
+			System.out.println(placeholder);
+		}
+
+		// Ausgabe des Hinweisfeldes...
+		System.out.println("*** Hinweise:");
+		for (int i = 0; i < rows; i++) {
+			String placeholder = "    ";
+			for (int j = 0; j < columns; j++) {
+				// ...wenn Mine dann "x"...
+				if (Court[i][j] == '*') {
+					placeholder += "x";
+				}
+				// ... sonst Wert des Feldes
+				else {
+					placeholder += Result[i][j];
+				}
+			}
+			System.out.println(placeholder);
 		}
 	}
 
-	public static void SolveField(int FieldPosition) throws Exception {
+	public static int[][] SolveField(char[][] Court, int rows, int columns)
+			throws Exception {
 
-		// Ausgangsdatei öffnen...
-		BufferedReader GameCourt = new BufferedReader(new FileReader(
-				"Input.txt"));
-		// Zeilen anderer Spiele überspringen...
-		for (int i = 1; i < FieldPosition; i++) {
-			InputRow = GameCourt.readLine();
-		}
-		// Spieldaten einlesen...
-		InputRow = GameCourt.readLine();
-		// Anzahl Spalten / Zeilen auslesen...
-		//String Rows = InputRow.substring(0, 1);
-		//String Columns = InputRow.substring(2, 3);
-		String[] FieldSize = InputRow.split(" ");
-		String Rows = FieldSize[0].trim();
-		String Columns = FieldSize[1].trim();
-		n = Integer.valueOf(Rows).intValue();
-		m = Integer.valueOf(Columns).intValue();
-
-		// falls Spielfeld leer - Abbruch, nächstes Spielfeld...
-		if (n == 0 || m == 0) {
-			System.out.println();
-		} else {
-			// Zeilen des Spiels einlesen, in Liste speichern...	
-			GameList = new ArrayList<String>();
-			while ((InputRow = GameCourt.readLine()) != null) {
-				GameList.add(InputRow);
-			}
-
-			GameCourt.close();
-			// Spielfeld als Array setzen, Zeilen & Spalten = n & m
-			String[][] Court = new String[n][m];
-
-			// Spielfeld mit Daten aus der Liste befüllen...
-			for (int i = 0; i < n; i++) {
-				for (int j = 0, k = 1; j < m; j++, k++) {
-					Court[i][j] = GameList.get(i).substring(j, k);
-				}
-			}
-
-			// Hinweis- und Minen-Array größer als Spielfeld-Array
-			// Zur Bestimmung der Nachbarn via For-Schleife
-			int[][] Indicator = new int[n + 2][m + 2];
-			// Alle möglichen Minenfelder false setzen
-			Boolean[][] MineField = new Boolean[n + 2][m + 2];
-			for (int i = 0; i < MineField.length; i++) {
-				for (int j = 0; j < MineField[0].length; j++) {
-					MineField[i][j] = false;
-				}
-			}
-
-			// Alle Felder mit Mine - True setzen
-			// i & j = 1 da Hinweis- & Minen-Array größer als Feld-Array
-			for (int i = 1; i <= n; i++) {
-				for (int j = 1; j <= m; j++) {
-					if (Court[i - 1][j - 1].equals("*")) {
-						MineField[i][j] = true;
-					}
-				}
-			}
-			
-			// Bestimmung der Hinweiswerte je Nachbarfeld...
-			for (int i = 1; i <= n; i++) {
-				for (int j = 1; j <= m; j++) {
-					// Feldnachbarn bestimmen...
-					for (int k = i - 1; k <= i + 1; k++) {
-						for (int l = j - 1; l <= j + 1; l++) {
-							// Wenn auf umliegenden Feld Mine dann +1
-							if (MineField[k][l]) {
-								Indicator[i][j]++;
-							}
+		n = rows - 1;
+		m = columns - 1;
+		int[][] Indicator = new int[rows][columns];
+		for (int i = 0; i <= n; i++) {
+			for (int j = 0; j <= m; j++) {
+				if (Court[i][j] == '*') {
+					if (i > 0) {
+						Indicator[i - 1][j]++;
+						if (j > 0) {
+							Indicator[i - 1][j - 1]++;
+						}
+						if (j < m) {
+							Indicator[i - 1][j + 1]++;
 						}
 					}
-				}
-			}
-			// Ausgabe des Spielfeldes
-			for (int i = 0; i < n; i++) {
-				for (int j = 0; j < m; j++) {
-					System.out.print(Court[i][j]);
-				}
-				// Leerzeile für neue Zeile
-				System.out.println();
-			}
-
-			// Ausgabe des Hinweisfeldes...
-			System.out.println();
-			System.out.println("*** Hinweise:");
-			System.out.println();
-			for (int i = 1; i <= n; i++) {
-				for (int j = 1; j <= m; j++) {
-					// ...wenn Mine dann "x"...
-					if (MineField[i][j]) {
-						System.out.print("x");
+					if (i < n) {
+						Indicator[i + 1][j]++;
+						if (j > 0) {
+							Indicator[i + 1][j - 1]++;
+						}
+						if (j < m) {
+							Indicator[i + 1][j + 1]++;
+						}
 					}
-					// ... sonst Wert des Feldes
-					else {
-						System.out.print(Indicator[i][j]);
+					if (j > 0) {
+						Indicator[i][j - 1]++;
+					}
+					if (j < m) {
+						Indicator[i][j + 1]++;
 					}
 				}
-				// Leerzeile für neue Zeile
-				System.out.println();
 			}
-			// Füllzeile für neues Spiel
-			System.out.println("------------------");
 		}
+		return Indicator;
 	}
 }
