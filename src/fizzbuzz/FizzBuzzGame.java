@@ -33,8 +33,8 @@ public class FizzBuzzGame {
 		
 		for (int i = 1; i <= n; i++) {
 			
-			String UserInput = JOptionPane.showInputDialog(null, i+" - Fizz - Buzz - FizzBuzz", "Bitte ihre Lösung auswählen", JOptionPane.QUESTION_MESSAGE);
-			
+			//String UserInput = JOptionPane.showInputDialog(null, i+" - Fizz - Buzz - FizzBuzz", "Bitte ihre Lösung auswählen", JOptionPane.QUESTION_MESSAGE);
+			String UserInput = JOptionPane.showInputDialog(null, "Next?", "Bitte ihre Lösung auswählen", JOptionPane.QUESTION_MESSAGE);
 			if (UserInput.equals(Result(i))) {
 				JOptionPane.showMessageDialog(null,"Richtig!","Die Antwort war korrekt",JOptionPane.INFORMATION_MESSAGE);
 			}
