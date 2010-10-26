@@ -1,9 +1,5 @@
 package minesweeper;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.LineNumberReader;
-import java.util.ArrayList;
 import java.util.*;
 
 /*
@@ -20,9 +16,11 @@ public class Minesweeper {
 
 	public static void main(String[] args) throws Exception {
 
-		System.out.println("### MineSweeper ###");
+		System.out.println("###       MineSweeper       ###");
+		System.out.println("*** max. 100 Zeilen/Spalten ***");
+		System.out.println("_______________________________");
 		Startgame();
-		System.out.println("###################");
+		System.out.println("###############################");
 	}
 
 	public static void Startgame() throws Exception {
@@ -30,9 +28,17 @@ public class Minesweeper {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("Bitte Anzahl der Zeilen eingeben: ");
 		int rows = scanner.nextInt();
+		while (rows <= 0 || rows > 100) {
+			System.out.print("Bitte korrekte Anzahl der Zeilen eingeben: ");
+			rows = scanner.nextInt();
+		}
 		System.out.print("Bitte Anzahl der Spalten eingeben: ");
 		int columns = scanner.nextInt();
-
+		while (columns <= 0 || columns > 100) {
+			System.out.print("Bitte korrekte Anzahl der Spalten eingeben: ");
+			columns = scanner.nextInt();
+		}
+		
 		Game = new String[rows];
 		Court = new char[rows][columns];
 		for (int i = 0; i < rows; i++) {
@@ -53,9 +59,9 @@ public class Minesweeper {
 		}
 
 		Result = SolveField(Court, rows, columns);
-		System.out.println("~~~~~~~~~~~~~");
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		Output(Result, Court, rows, columns);
-		System.out.println("~~~~~~~~~~~~~");
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 	}
 
 	public static void Output(int[][] Result, char[][] Court, int rows,
