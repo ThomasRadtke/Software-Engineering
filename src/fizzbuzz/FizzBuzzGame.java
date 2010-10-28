@@ -1,6 +1,6 @@
 package fizzbuzz;
 
-import java.util.*;
+//import java.util.*;
 import javax.swing.*;
 
 public class FizzBuzzGame {
@@ -81,7 +81,7 @@ public class FizzBuzzGame {
 				System.exit(0);
 			}
 		}
-	}
+	} 
 	
 	public static String Result (int number) {
 		
